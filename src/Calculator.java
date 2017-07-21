@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
+import java.math.BigInteger;
+
 import javax.swing.*;
 //import javax.swing.border.Border;
 
@@ -870,62 +872,75 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 
 	public String convertHexToDec()
 	{
-		return Long.toString(Long.parseLong(buffer, 16));
+		return new BigInteger(buffer, 16).toString(10);
+		//return Long.toString(Long.parseLong(buffer, 16));
 	}
 	
 	public String convertOctToDec()
 	{
-		return Long.toString(Long.parseLong(buffer, 8));
+		return new BigInteger(buffer, 8).toString(10);
+		//return Long.toString(Long.parseLong(buffer, 8));
 	}
 	
 	public String convertBinToDec()
 	{
-		return Long.toString(Long.parseLong(buffer, 2));
+		return new BigInteger(buffer, 2).toString(10);
+		//return Long.toString(Long.parseLong(buffer, 2));
 	}
 	
 	public String convertDecToOct()
 	{
-		return Long.toOctalString(Long.parseLong(buffer));
+		return new BigInteger(buffer, 10).toString(8);
+		//return Long.toOctalString(Long.parseLong(buffer));
 	}
 	
 	public String convertHexToOct()
 	{
-		return Long.toOctalString(Long.parseLong(buffer, 16));
+		return new BigInteger(buffer, 16).toString(8);
+		//return Long.toOctalString(Long.parseLong(buffer, 16));
 	}
 	
 	public String convertBinToOct()
 	{
-		return Long.toOctalString(Long.parseLong(buffer, 2));
+		return new BigInteger(buffer, 2).toString(8);
+		//return Long.toOctalString(Long.parseLong(buffer, 2));
 	}
 	
 	public String convertDecToHex()
 	{
-		return Long.toHexString(Long.parseLong(buffer));
+		return new BigInteger(buffer, 10).toString(16);
+		//return Long.toHexString(Long.parseLong(buffer));
 	}
 	
 	public String convertOctToHex()
 	{	
-		return Long.toHexString(Long.parseLong(buffer, 8));
+		return new BigInteger(buffer, 8).toString(16);
+		//return Long.toHexString(Long.parseLong(buffer, 8));
 	}
 	
 	public String convertBinToHex()
 	{
-		return Long.toHexString(Long.parseLong(buffer, 2));
+		return new BigInteger(buffer, 2).toString(16);
+		//return value.toString(16);
+		//return Long.toHexString(Long.parseLong(buffer, 2));
 	}
 	
 	public String convertDecToBin()
 	{
-		return Long.toBinaryString(Long.parseLong(buffer));
+		return new BigInteger(buffer, 10).toString(2);
+		//return Long.toBinaryString(Long.parseLong(buffer));
 	}
 	
 	public String convertHexToBin()
 	{
-		return Long.toBinaryString(Long.parseLong(buffer, 16));
+		return new BigInteger(buffer, 16).toString(2);
+		//return Long.toBinaryString(Long.parseLong(buffer, 16));
 	}
 	
 	public String convertOctToBin()
 	{
-		return Long.toBinaryString(Long.parseLong(buffer, 8));
+		return new BigInteger(buffer, 8).toString(2);
+		//return Long.toBinaryString(Long.parseLong(buffer, 8));
 	}
 	
 	public void addToBuffer(String num)
