@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class Calculator extends JFrame implements ActionListener, MouseListener
 {
-	private String buffer = "0", total = "0", currentOperation, lastOperation, binaryString, currentFormat, lastFormat;
+	private String buffer = "0", total = "0", currentOperation, lastOperation, binaryString, currentFormat = "dec", lastFormat;
 	private JPanel radioPanel1, radioPanel2, buttonPanel1;
 	private ButtonGroup radioButtons1, radioButtons2;
 	private JMenuBar menubar;
@@ -225,7 +225,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		//buttonPanel1.setLayout(new GridLayout(5, 7));
 		buttonPanel1.setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
-		Dimension buttonSize = new Dimension(45, 35);
+		Dimension buttonSize = new Dimension(45, 25);
 		
 		//Blank buttons
 		blank = new JButton();
@@ -307,10 +307,12 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		quot = new JButton("Quot");
 		quot.setOpaque(false);
 		quot.setPreferredSize(buttonSize);
+		quot.setFont(new Font("Arial", Font.PLAIN, 8));
 		
 		//Mod button
 		mod = new JButton("Mod");
 		mod.setPreferredSize(buttonSize);
+		mod.setFont(new Font("Arial", Font.PLAIN, 9));
 
 		//A button
 		a = new JButton("A");
@@ -379,7 +381,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		nine.addActionListener(this);
 		
 		//Backspace
-		backspace = new JButton("Back");
+		backspace = new JButton("\u2190");
 		backspace.setPreferredSize(buttonSize);
 		backspace.addActionListener(this);
 		
@@ -393,8 +395,9 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		clear.addActionListener(this);
 		
 		//Operations
-		plusMinus = new JButton("+-");
+		plusMinus = new JButton("\u00B1");
 		plusMinus.setPreferredSize(buttonSize);
+		plusMinus.addActionListener(this);
 		
 		divide = new JButton("/");
 		divide.setPreferredSize(buttonSize);
@@ -412,13 +415,13 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		plus.setPreferredSize(buttonSize);
 		plus.addActionListener(this);
 		
-		root = new JButton("Sqrt");
+		root = new JButton("\u221A");
 		root.setPreferredSize(buttonSize);
 		
 		percent = new JButton("%");
 		percent.setPreferredSize(buttonSize);
 		
-		fraction = new JButton("1/x");
+		fraction = new JButton("1\u2044x");
 		fraction.setPreferredSize(buttonSize);
 		
 		equals = new JButton("=");
@@ -715,6 +718,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		else if (e.getSource() == ce)
 		{
 			buffer = "0";
+			total = "0";
 			//number1 = "0";
 			//number2 = "0";
 			displayBuffer();
@@ -728,8 +732,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			{
 				buffer = total;
 			}
-			int totalInt = Integer.parseInt(buffer) + Integer.parseInt(total);
-			total = totalInt + "";
+			long totalLong = Long.parseLong(buffer) + Long.parseLong(total);
+			total = totalLong + "";
 			displayTotal();
 			buffer = "0";
 			lastOperation = "add";
@@ -738,11 +742,18 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		{
 			
 		}
+		else if (e.getSource() == plusMinus)
+		{
+			buffer = -Long.parseLong(buffer) + "";
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
 		else if (e.getSource() == equals)
 		{
 			if (lastOperation == "add")
 			{				
-				total = (Integer.parseInt(buffer) + Integer.parseInt(total)) + "";
+				total = (Long.parseLong(buffer) + Long.parseLong(total)) + "";
 				displayTotal();
 				convertBufferToBinary();
 				displayBinaryBuffer();
@@ -752,18 +763,171 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == hexButton)
 		{
-			buffer = Long.toHexString(Long.parseLong(buffer));
-			//buffer = Integer.toHexString(Integer.parseInt(buffer));
+			if (currentFormat == "dec")
+			{
+				buffer = convertDecToHex();				
+			}
+			else if (currentFormat == "oct")
+			{
+				buffer = convertOctToHex();
+			}
+			else if (currentFormat == "bin")
+			{
+				buffer = convertBinToHex();
+			}
+			currentFormat = "hex";
 			displayBuffer();
+			
+			a.setEnabled(true);
+			b.setEnabled(true);
+			c.setEnabled(true);
+			d.setEnabled(true);
+			this.e.setEnabled(true);
+			f.setEnabled(true);
 		}
 		else if (e.getSource() == octButton)
 		{
-			buffer = Long.toOctalString(Long.parseLong(buffer));
-			buffer = Integer.toOctalString(Integer.parseInt(buffer));
+			if (currentFormat == "dec")
+			{
+				buffer = convertDecToOct();
+			}
+			else if (currentFormat == "hex")
+			{
+				buffer = convertHexToOct();
+			}
+			else if (currentFormat == "bin")
+			{
+				buffer = convertBinToOct();
+			}
+			currentFormat = "oct";
 			displayBuffer();
+			
+			if (a.isEnabled())
+			{
+				a.setEnabled(false);
+				b.setEnabled(false);
+				c.setEnabled(false);
+				d.setEnabled(false);
+				this.e.setEnabled(false);
+				f.setEnabled(false);
+			}
+		}
+		else if (e.getSource() == binButton)
+		{
+			if (currentFormat == "dec")
+			{
+				buffer = convertDecToBin();
+			}
+			else if (currentFormat == "hex")
+			{
+				buffer = convertHexToBin();
+			}
+			else if (currentFormat == "oct")
+			{
+				buffer = convertOctToBin();
+			}
+			currentFormat = "bin";
+			displayBuffer();
+			
+			if (a.isEnabled())
+			{
+				a.setEnabled(false);
+				b.setEnabled(false);
+				c.setEnabled(false);
+				d.setEnabled(false);
+				this.e.setEnabled(false);
+				f.setEnabled(false);
+			}
+		}
+		else if (e.getSource() == decButton)
+		{
+			if (currentFormat == "hex")
+			{
+				buffer = convertHexToDec();
+			}
+			else if (currentFormat == "oct")
+			{
+				buffer = convertOctToDec();
+			}
+			else if (currentFormat == "bin")
+			{
+				buffer = convertBinToDec();
+			}
+			currentFormat = "dec";
+			displayBuffer();
+			
+			if (a.isEnabled())
+			{
+				a.setEnabled(false);
+				b.setEnabled(false);
+				c.setEnabled(false);
+				d.setEnabled(false);
+				this.e.setEnabled(false);
+				f.setEnabled(false);
+			}
 		}
 	}
 
+	public String convertHexToDec()
+	{
+		return Long.toString(Long.parseLong(buffer, 16));
+	}
+	
+	public String convertOctToDec()
+	{
+		return Long.toString(Long.parseLong(buffer, 8));
+	}
+	
+	public String convertBinToDec()
+	{
+		return Long.toString(Long.parseLong(buffer, 2));
+	}
+	
+	public String convertDecToOct()
+	{
+		return Long.toOctalString(Long.parseLong(buffer));
+	}
+	
+	public String convertHexToOct()
+	{
+		return Long.toOctalString(Long.parseLong(buffer, 16));
+	}
+	
+	public String convertBinToOct()
+	{
+		return Long.toOctalString(Long.parseLong(buffer, 2));
+	}
+	
+	public String convertDecToHex()
+	{
+		return Long.toHexString(Long.parseLong(buffer));
+	}
+	
+	public String convertOctToHex()
+	{	
+		return Long.toHexString(Long.parseLong(buffer, 8));
+	}
+	
+	public String convertBinToHex()
+	{
+		return Long.toHexString(Long.parseLong(buffer, 2));
+	}
+	
+	public String convertDecToBin()
+	{
+		return Long.toBinaryString(Long.parseLong(buffer));
+	}
+	
+	public String convertHexToBin()
+	{
+		return Long.toBinaryString(Long.parseLong(buffer, 16));
+	}
+	
+	public String convertOctToBin()
+	{
+		return Long.toBinaryString(Long.parseLong(buffer, 8));
+	}
+	
 	public void addToBuffer(String num)
 	{
 		if (buffer == "0")
@@ -801,17 +965,18 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	
 	public void convertBufferToBinary()
 	{
-		if (Integer.parseInt(buffer) <= 0)
-		{
+		//if (Integer.parseInt(buffer) <= 0)
+		//{
 			//If the current number is negative, don't convert to binary
-			binaryString = "0000000000000000000000000000000000000000000000000000000000000000";
-		}	
-		else if (!binButton.isSelected())
+		//	binaryString = "0000000000000000000000000000000000000000000000000000000000000000";
+		//}	
+
+		if (!binButton.isSelected())
 		{
 			//Convert buffer only if binary mode is not selected
-			binaryString = Integer.toBinaryString(Integer.parseInt(buffer));
+			binaryString = Long.toBinaryString(Long.parseLong(buffer));
 			int binLength = binaryString.length();
-			if (binaryString.length() < 64)
+			if (binLength != 64)
 			{
 				for (int i = 0; i < (64 - binLength); ++i)
 				{
@@ -821,6 +986,15 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		}
 		else
 		{
+			binaryString = buffer;
+			int binLength = binaryString.length();
+			if (binLength != 64)
+			{
+				for (int i = 0; i < (64 - binLength); ++i)
+				{
+					binaryString = "0" + binaryString;
+				}
+			}
 			displayBinaryBuffer();
 		}
 	}
@@ -829,11 +1003,11 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	{
 		//Replace characters in bit display with the correct substrings of the binary string
 		int characterCount = -1;
-		for (int i = 0; i < 160; i += 5)
+		for (int i = 0; i < 80; i += 5)
 		{
 			//if (i < 36) //We are still on the first row
 			//{
-			int length = hexField.getText().length();
+			//int length = hexField.getText().length();
 				for (int j = 0; j < 4; ++j)
 				{
 					//For each number of the binary string, replace the character of the hexField at its correct location
@@ -865,20 +1039,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	public void mouseClicked(MouseEvent e) 
 	{
 		// TODO Auto-generated method stub
-		if (e.getSource() == view)
-		{
-			setVisible(false);
-		}
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) 
 	{
 		// TODO Auto-generated method stub
-		if (e.getSource() == view)
-		{
-			view.setPopupMenuVisible(true);
-		}
+
 		
 	}
 
@@ -886,10 +1054,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	public void mouseReleased(MouseEvent e) 
 	{
 		// TODO Auto-generated method stub
-		if (e.getSource() == view)
-		{
-			view.setPopupMenuVisible(false);
-		}
+
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class CalcTest 
@@ -8,8 +9,15 @@ public class CalcTest
 	{
 		try 
 		{
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		}
+			 for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) 
+			 {
+			        if ("Nimbus".equals(info.getName())) 
+			        {
+			            UIManager.setLookAndFeel(info.getClassName());
+			            break;
+			        }		
+			 }
+	    }
 		catch (Exception e) 
 		{
 			// TODO Auto-generated catch block
