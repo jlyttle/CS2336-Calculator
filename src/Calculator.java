@@ -34,14 +34,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		createRadioButtons();
 		createButtons();
 		getClipboard();
-		//layout.setHorizontalGroup(
-			//	layout.createSequentialGroup()
-				//	.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					//		.addComponent(buttonPanel1)));
-	//	layout.setVerticalGroup(
-		//		layout.createSequentialGroup()
-			//		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE))
-				//	.addComponent(buttonPanel1));
 		
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
@@ -55,11 +47,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 							.addGap(35)
 							.addComponent(hexField))
 						.addComponent(buttonPanel1, GroupLayout.Alignment.CENTER, 200, 250, 500)));
-						//.addGroup(layout.createSequentialGroup()
-							//.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-								//.addComponent(radioPanel1)
-								//.addComponent(radioPanel2))
-							//.addComponent(buttonPanel1))));
+
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 					.addComponent(menubar)
@@ -71,36 +59,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 							.addGap(35)
 							.addComponent(hexField))
 					.addComponent(buttonPanel1, 200, 250, 500));
-					//.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						//.addGroup(layout.createSequentialGroup()
-							//.addComponent(radioPanel1)
-							//.addComponent(radioPanel2))
-						//.addComponent(buttonPanel1)));
-		
-		//num1Label = new JLabel("Number 1: ");
-		//num2Label = new JLabel("Number 2: ");
-		//num1Field = new JTextField(10);
-		//num2Field = new JTextField(10);
-		
-		//panel1.add(num1Label);
-		//panel1.add(num1Field);
-		//panel1.add(num2Label);
-		//panel1.add(num2Field);
-		//add(panel1, BorderLayout.NORTH);
-		
-		//panel2 = new JPanel();
-		//addButton = new JButton("Add");
-		//panel2.add(addButton);
-		//add(panel2, BorderLayout.CENTER);
-		
-		//panel3 = new JPanel();
-		//resultLabel = new JLabel("Result: ");
-		//resultField = new JTextField(10);
-		//resultField.setEditable(false);
-		//panel3.add(resultLabel);
-		//panel3.add(resultField);
-		//add(panel3, BorderLayout.SOUTH);
-		//addButton.addActionListener(this);
 	}
 	
 	private void createMenuBar()
@@ -155,12 +113,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					   + "0000 0000 0000 0000 0000 0000 0000 0000\n"
 					   + "31                  15                0");
 		
-		//hexField2.setText("63                  47               32");
-		//hexField3.setText("0000 0000 0000 0000 0000 0000 0000 0000");
-		//hexField4.setText("31                  15                0");
-		
 		hexField.setBorder(BorderFactory.createEtchedBorder());
-		//hexPanel.setBorder(BorderFactory.createEtchedBorder());
 	}
 	
 	private void createRadioButtons()
@@ -191,7 +144,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		radioPanel1.add(binButton);
 	
 		radioPanel1.setBorder(BorderFactory.createEtchedBorder());
-		//radioPanel1.setMaximumSize(new Dimension(100, 100));
 		
 		decButton.setSelected(true);
 		
@@ -215,7 +167,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		radioPanel2.add(wordButton);
 		radioPanel2.add(byteButton);
 		
-		//radioPanel2.setMaximumSize(new Dimension(100, 100));
 		radioPanel2.setBorder(BorderFactory.createEtchedBorder());
 		
 		qwordButton.setSelected(true);
@@ -224,7 +175,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	private void createButtons()
 	{
 		buttonPanel1 = new JPanel();
-		//buttonPanel1.setLayout(new GridLayout(5, 7));
 		buttonPanel1.setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
 		Dimension buttonSize = new Dimension(45, 25);
@@ -310,36 +260,44 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		quot.setOpaque(false);
 		quot.setPreferredSize(buttonSize);
 		quot.setFont(new Font("Arial", Font.PLAIN, 8));
+		quot.addActionListener(this);
 		
 		//Mod button
 		mod = new JButton("Mod");
 		mod.setPreferredSize(buttonSize);
 		mod.setFont(new Font("Arial", Font.PLAIN, 9));
+		quot.addActionListener(this);
 
 		//A button
 		a = new JButton("A");
 		a.setPreferredSize(buttonSize);
 		a.setEnabled(false);
+		a.addActionListener(this);
 		
 		b = new JButton("B");
 		b.setPreferredSize(buttonSize);
 		b.setEnabled(false);
+		b.addActionListener(this);
 		
 		c = new JButton("C");
 		c.setPreferredSize(buttonSize);
 		c.setEnabled(false);
+		c.addActionListener(this);
 		
 		d = new JButton("D");
 		d.setPreferredSize(buttonSize);
 		d.setEnabled(false);
+		d.addActionListener(this);
 		
 		e = new JButton("E");
 		e.setPreferredSize(buttonSize);
 		e.setEnabled(false);
+		e.addActionListener(this);
 		
 		f = new JButton("F");
 		f.setPreferredSize(buttonSize);
 		f.setEnabled(false);
+		f.addActionListener(this);
 		
 		//Numbers
 		zed = new JButton("0");
@@ -432,6 +390,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		
 		period = new JButton(".");
 		period.setPreferredSize(buttonSize);
+		period.addActionListener(this);
 		
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.ipady = 10;
@@ -696,6 +655,50 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			convertBufferToBinary();
 			displayBinaryBuffer();
 		}
+		
+		else if (e.getSource() == a)
+		{
+			addToBuffer("A");
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
+		else if (e.getSource() == b)
+		{
+			addToBuffer("B");
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
+		else if (e.getSource() == c)
+		{
+			addToBuffer("C");
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
+		else if (e.getSource() == d)
+		{
+			addToBuffer("D");
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
+		else if (e.getSource() == this.e)
+		{
+			addToBuffer("E");
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
+		else if (e.getSource() == f)
+		{
+			addToBuffer("F");
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
+		
 		else if (e.getSource() == backspace)
 		{
 			if (buffer.length() == 1)
@@ -980,38 +983,34 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	
 	public void convertBufferToBinary()
 	{
-		//if (Integer.parseInt(buffer) <= 0)
-		//{
-			//If the current number is negative, don't convert to binary
-		//	binaryString = "0000000000000000000000000000000000000000000000000000000000000000";
-		//}	
-
-		if (!binButton.isSelected())
+		if (currentFormat == "dec")
 		{
-			//Convert buffer only if binary mode is not selected
-			binaryString = Long.toBinaryString(Long.parseLong(buffer));
-			int binLength = binaryString.length();
-			if (binLength != 64)
-			{
-				for (int i = 0; i < (64 - binLength); ++i)
-				{
-					binaryString = "0" + binaryString;
-				}
-			}
+			binaryString = new BigInteger(buffer, 10).toString(2);		
+		}
+		else if (currentFormat == "oct")
+		{
+			binaryString = new BigInteger(buffer, 8).toString(2);
+		}
+		else if (currentFormat == "hex")
+		{
+			binaryString = new BigInteger(buffer, 16).toString(2);
 		}
 		else
 		{
 			binaryString = buffer;
-			int binLength = binaryString.length();
-			if (binLength != 64)
-			{
-				for (int i = 0; i < (64 - binLength); ++i)
-				{
-					binaryString = "0" + binaryString;
-				}
-			}
-			displayBinaryBuffer();
 		}
+
+		//Convert buffer only if binary mode is not selected
+		int binLength = binaryString.length();
+		if (binLength != 64)
+		{
+			for (int i = 0; i < (64 - binLength); ++i)
+			{
+				binaryString = "0" + binaryString;
+			}
+		}
+
+		displayBinaryBuffer();
 	}
 	
 	public void displayBinaryBuffer()
