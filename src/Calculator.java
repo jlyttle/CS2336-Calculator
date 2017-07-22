@@ -807,6 +807,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			else if (currentFormat == "oct")
 			{
 				buffer = convertOctToHex();
+				eight.setEnabled(true);
+				nine.setEnabled(true);
 			}
 			else if (currentFormat == "bin")
 			{
@@ -857,8 +859,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				five.setEnabled(true);
 				six.setEnabled(true);
 				seven.setEnabled(true);
-				eight.setEnabled(true);
-				nine.setEnabled(true);
 			}
 			currentFormat = "oct";
 			displayBuffer();
@@ -873,6 +873,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				f.setEnabled(false);
 			}
 			period.setEnabled(false);
+			eight.setEnabled(false);
+			nine.setEnabled(false);
 		}
 		else if (e.getSource() == binButton)
 		{
@@ -894,6 +896,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			else if (currentFormat == "oct")
 			{
 				buffer = convertOctToBin();
+				eight.setEnabled(true);
+				nine.setEnabled(true);
 			}
 			currentFormat = "bin";
 			displayBuffer();
@@ -934,6 +938,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			else if (currentFormat == "oct")
 			{
 				buffer = convertOctToDec();
+				eight.setEnabled(true);
+				nine.setEnabled(true);
 			}
 			else if (currentFormat == "bin")
 			{
