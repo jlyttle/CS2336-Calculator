@@ -707,6 +707,10 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			{
 				buffer = "0";
 			}
+			else if (buffer.length() == 2 && (buffer.charAt(0) == '-'))
+			{
+				buffer = "0";
+			}
 			else
 			{
 				buffer = buffer.substring(0, buffer.length() - 1);
