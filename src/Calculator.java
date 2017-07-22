@@ -1,3 +1,7 @@
+//Jonathan Lyttle
+//netid: jbl160530
+//Calculator - A graphical calculator with similar functionality to Windows
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -5,7 +9,6 @@ import java.awt.event.*;
 import java.math.BigInteger;
 
 import javax.swing.*;
-//import javax.swing.border.Border;
 
 public class Calculator extends JFrame implements ActionListener, MouseListener
 {
@@ -16,7 +19,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	private JMenu help, edit, view;
 	private JMenuItem helpItem, editItem, viewItem;
 	private JRadioButton hexButton, decButton, octButton, binButton, qwordButton, dwordButton, wordButton, byteButton;
-	//private JLabel blank;//26 total
 	private JButton blank, blank2, blank3, blank4, blank5, blank6, blank7, blank8, blank9, blank10, blank11, blank12, blank13, blank14, blank15,
 					a, b, c, d, e, f, mod, backspace, ce, clear, plusMinus, root, percent, fraction, equals, plus, minus, multiply, divide, period,
 					one, two, three, four, five, six, seven, eight, nine, zed, quot;
@@ -575,7 +577,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == editItem)
 		{
-			clipboard.setContents(new StringSelection(buffer), null);
+			clipboard.setContents(new StringSelection(resultField.getText()), null);
 		}
 		else if (e.getSource() == helpItem)
 		{
@@ -716,6 +718,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		else if (e.getSource() == clear)
 		{
 			buffer = "0";
+			total = "0";
 			displayBuffer();
 			convertBufferToBinary();
 			displayBinaryBuffer();
@@ -723,29 +726,51 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		else if (e.getSource() == ce)
 		{
 			buffer = "0";
-			total = "0";
-			//number1 = "0";
-			//number2 = "0";
 			displayBuffer();
 			convertBufferToBinary();
 			displayBinaryBuffer();
 		}
 		else if (e.getSource() == plus)
 		{
-			//TODO: if last operation was equals, set the buffer equal to the total unless the user enters another number
-			if (lastOperation == "equals")
-			{
-				buffer = total;
-			}
-			long totalLong = Long.parseLong(buffer) + Long.parseLong(total);
-			total = totalLong + "";
-			displayTotal();
+			completeLastOperation();
+			total = buffer;
+			//long totalLong = Long.parseLong(buffer) + Long.parseLong(total);
+			//total = totalLong + "";
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
 			buffer = "0";
 			lastOperation = "add";
 		}
 		else if (e.getSource() == minus)
 		{
-			
+			completeLastOperation();
+			total = buffer;
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+			buffer = "0";
+			lastOperation = "subtract";
+		}
+		else if (e.getSource() == multiply)
+		{
+			completeLastOperation();
+			total = buffer;
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+			buffer = "0";
+			lastOperation = "multiply";
+		}
+		else if (e.getSource() == divide)
+		{
+			completeLastOperation();
+			total = buffer;
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+			buffer = "0";
+			lastOperation = "divide";
 		}
 		else if (e.getSource() == plusMinus)
 		{
@@ -756,18 +781,25 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == equals)
 		{
-			if (lastOperation == "add")
-			{				
-				total = (Long.parseLong(buffer) + Long.parseLong(total)) + "";
-				displayTotal();
-				convertBufferToBinary();
-				displayBinaryBuffer();
-				lastOperation = "equals";
-			}
+			completeLastOperation();
+			total = buffer;
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+			//prevAmount = buffer;
+			//prevOperation = lastOperation;
 			buffer = "0";
+			lastOperation = "equals";
 		}
 		else if (e.getSource() == hexButton)
 		{
+			if (lastOperation != "none")
+			{
+				// Set the buffer as the total if we have a hanging operation
+				buffer = total;
+				lastOperation = "none";
+			}
+			
 			if (currentFormat == "dec")
 			{
 				buffer = convertDecToHex();				
@@ -779,6 +811,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			else if (currentFormat == "bin")
 			{
 				buffer = convertBinToHex();
+				two.setEnabled(true);
+				three.setEnabled(true);
+				four.setEnabled(true);
+				five.setEnabled(true);
+				six.setEnabled(true);
+				seven.setEnabled(true);
+				eight.setEnabled(true);
+				nine.setEnabled(true);
 			}
 			currentFormat = "hex";
 			displayBuffer();
@@ -789,9 +829,17 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			d.setEnabled(true);
 			this.e.setEnabled(true);
 			f.setEnabled(true);
+			period.setEnabled(false);
 		}
 		else if (e.getSource() == octButton)
 		{
+			if (lastOperation != "none")
+			{
+				// Set the buffer as the total if we have a hanging operation
+				buffer = total;
+				lastOperation = "none";
+			}
+			
 			if (currentFormat == "dec")
 			{
 				buffer = convertDecToOct();
@@ -803,6 +851,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			else if (currentFormat == "bin")
 			{
 				buffer = convertBinToOct();
+				two.setEnabled(true);
+				three.setEnabled(true);
+				four.setEnabled(true);
+				five.setEnabled(true);
+				six.setEnabled(true);
+				seven.setEnabled(true);
+				eight.setEnabled(true);
+				nine.setEnabled(true);
 			}
 			currentFormat = "oct";
 			displayBuffer();
@@ -816,9 +872,17 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				this.e.setEnabled(false);
 				f.setEnabled(false);
 			}
+			period.setEnabled(false);
 		}
 		else if (e.getSource() == binButton)
 		{
+			if (lastOperation != "none")
+			{
+				// Set the buffer as the total if we have a hanging operation
+				buffer = total;
+				lastOperation = "none";
+			}
+			
 			if (currentFormat == "dec")
 			{
 				buffer = convertDecToBin();
@@ -834,6 +898,15 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			currentFormat = "bin";
 			displayBuffer();
 			
+			two.setEnabled(false);
+			three.setEnabled(false);
+			four.setEnabled(false);
+			five.setEnabled(false);
+			six.setEnabled(false);
+			seven.setEnabled(false);
+			eight.setEnabled(false);
+			nine.setEnabled(false);
+			
 			if (a.isEnabled())
 			{
 				a.setEnabled(false);
@@ -843,9 +916,17 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				this.e.setEnabled(false);
 				f.setEnabled(false);
 			}
+			period.setEnabled(false);
 		}
 		else if (e.getSource() == decButton)
 		{
+			if (lastOperation != "none")
+			{
+				// Set the buffer as the total if we have a hanging operation
+				buffer = total;
+				lastOperation = "none";
+			}
+			
 			if (currentFormat == "hex")
 			{
 				buffer = convertHexToDec();
@@ -857,6 +938,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			else if (currentFormat == "bin")
 			{
 				buffer = convertBinToDec();
+				two.setEnabled(true);
+				three.setEnabled(true);
+				four.setEnabled(true);
+				five.setEnabled(true);
+				six.setEnabled(true);
+				seven.setEnabled(true);
+				eight.setEnabled(true);
+				nine.setEnabled(true);
 			}
 			currentFormat = "dec";
 			displayBuffer();
@@ -870,9 +959,91 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				this.e.setEnabled(false);
 				f.setEnabled(false);
 			}
+			period.setEnabled(true);
 		}
 	}
 
+	public void completeLastOperation()
+	{
+		//If we're chaining operations, complete those first, then set the operation to subtract.
+		if (lastOperation == "add")
+		{
+			if (currentFormat == "dec")
+			{
+				buffer = (Long.parseLong(buffer) + Long.parseLong(total)) + "";					
+			}
+			else if (currentFormat == "hex")
+			{
+				buffer = Long.toHexString(Long.parseLong(buffer, 16) + Long.parseLong(total, 16)).toUpperCase();
+			}
+			else if (currentFormat == "oct")
+			{
+				buffer = Long.toOctalString(Long.parseLong(buffer, 8) + Long.parseLong(total, 8));
+			}
+			else
+			{
+				buffer = Long.toBinaryString(Long.parseLong(buffer, 2) + Long.parseLong(total, 2));
+			}
+		}
+		else if (lastOperation == "subtract")
+		{
+			if (currentFormat == "dec")
+			{
+				buffer = (Long.parseLong(total) - Long.parseLong(buffer)) + "";					
+			}
+			else if (currentFormat == "hex")
+			{
+				buffer = Long.toHexString(Long.parseLong(total, 16) - Long.parseLong(buffer, 16)).toUpperCase();
+			}
+			else if (currentFormat == "oct")
+			{
+				buffer = Long.toOctalString(Long.parseLong(total, 8) - Long.parseLong(buffer, 8));
+			}
+			else
+			{
+				buffer = Long.toBinaryString(Long.parseLong(total, 2) - Long.parseLong(buffer, 2));
+			}
+		}
+		else if (lastOperation == "multiply")
+		{
+			if (currentFormat == "dec")
+			{
+				buffer = (Long.parseLong(buffer) * Long.parseLong(total)) + "";					
+			}
+			else if (currentFormat == "hex")
+			{
+				buffer = Long.toHexString(Long.parseLong(buffer, 16) * Long.parseLong(total, 16)).toUpperCase();	
+			}
+			else if (currentFormat == "oct")
+			{
+				buffer = Long.toOctalString(Long.parseLong(buffer, 8) * Long.parseLong(total, 8));	
+			}
+			else
+			{
+				buffer = Long.toBinaryString(Long.parseLong(buffer, 2) * Long.parseLong(total, 2));	
+			}
+		}
+		else if (lastOperation == "divide")
+		{
+			if (currentFormat == "dec")
+			{
+				buffer = (Long.parseLong(total) / Long.parseLong(buffer)) + "";					
+			}
+			else if (currentFormat == "hex")
+			{
+				buffer = Long.toHexString(Long.parseLong(total, 16) / Long.parseLong(buffer, 16)).toUpperCase();	
+			}
+			else if (currentFormat == "oct")
+			{
+				buffer = Long.toOctalString(Long.parseLong(total, 8) / Long.parseLong(buffer, 8));	
+			}
+			else
+			{
+				buffer = Long.toBinaryString(Long.parseLong(total, 2) / Long.parseLong(buffer, 2));	
+			}
+		}
+	}
+	
 	public String convertHexToDec()
 	{
 		return new BigInteger(buffer, 16).toString(10);
@@ -911,19 +1082,19 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	
 	public String convertDecToHex()
 	{
-		return new BigInteger(buffer, 10).toString(16);
+		return new BigInteger(buffer, 10).toString(16).toUpperCase();
 		//return Long.toHexString(Long.parseLong(buffer));
 	}
 	
 	public String convertOctToHex()
 	{	
-		return new BigInteger(buffer, 8).toString(16);
+		return new BigInteger(buffer, 8).toString(16).toUpperCase();
 		//return Long.toHexString(Long.parseLong(buffer, 8));
 	}
 	
 	public String convertBinToHex()
 	{
-		return new BigInteger(buffer, 2).toString(16);
+		return new BigInteger(buffer, 2).toString(16).toUpperCase();
 		//return value.toString(16);
 		//return Long.toHexString(Long.parseLong(buffer, 2));
 	}
@@ -971,6 +1142,16 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		return false;
 	}
 	
+	public boolean isNegative()
+	{
+		//Return whether the buffer has a negative sign or not
+		if (binaryString.charAt(0) == '-')
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public void displayBuffer()
 	{
 		resultField.setText(buffer);
@@ -998,6 +1179,12 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		else
 		{
 			binaryString = buffer;
+		}
+		
+		//Remove negative sign if it exists
+		if (isNegative())
+		{
+			binaryString = binaryString.substring(1, binaryString.length());
 		}
 
 		//Convert buffer only if binary mode is not selected
