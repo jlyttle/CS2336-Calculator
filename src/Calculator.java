@@ -12,7 +12,7 @@ import javax.swing.*;
 
 public class Calculator extends JFrame implements ActionListener, MouseListener
 {
-	private String buffer = "0", total = "0", currentOperation, lastOperation, binaryString, currentFormat = "dec", lastFormat;
+	private String buffer = "0", total = "0", lastOperation = "none", binaryString, currentFormat = "dec", lastFormat;
 	private JPanel radioPanel1, radioPanel2, buttonPanel1;
 	private ButtonGroup radioButtons1, radioButtons2;
 	private JMenuBar menubar;
