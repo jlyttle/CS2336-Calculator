@@ -863,7 +863,17 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == percent)
 		{
-			
+			if (currentFormat == "dec")
+			{
+				buffer = (Double.valueOf(total) / 100.0) + "";
+				if (buffer.charAt(buffer.length() - 1) == '0' && buffer.charAt(buffer.length() - 2) == '.')
+				{
+					buffer = removeDecimal(buffer);
+				}
+			}
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
 		}
 		else if (e.getSource() == hexButton)
 		{
@@ -1156,7 +1166,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			}
 			else if (currentFormat == "dec")
 			{
-				if (isInt(buffer) && isInt(total))
+				if (isInt(buffer) && isInt(total) && Integer.valueOf(total) > Integer.valueOf(buffer))
 				{
 					buffer = (Long.parseLong(total) / Long.parseLong(buffer)) + "";						
 				}
@@ -1209,79 +1219,66 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	public String convertHexToDec()
 	{
 		return new BigInteger(buffer, 16).toString(10);
-		//return Long.toString(Long.parseLong(buffer, 16));
 	}
 	
 	public String convertOctToDec()
 	{
 		return new BigInteger(buffer, 8).toString(10);
-		//return Long.toString(Long.parseLong(buffer, 8));
 	}
 	
 	public String convertBinToDec()
 	{
 		return new BigInteger(buffer, 2).toString(10);
-		//return Long.toString(Long.parseLong(buffer, 2));
 	}
 	
 	public String convertDecToOct()
 	{
 		return new BigInteger(buffer, 10).toString(8);
-		//return Long.toOctalString(Long.parseLong(buffer));
 	}
 	
 	public String convertHexToOct()
 	{
 		return new BigInteger(buffer, 16).toString(8);
-		//return Long.toOctalString(Long.parseLong(buffer, 16));
 	}
 	
 	public String convertBinToOct()
 	{
 		return new BigInteger(buffer, 2).toString(8);
-		//return Long.toOctalString(Long.parseLong(buffer, 2));
 	}
 	
 	public String convertDecToHex()
 	{
 		return new BigInteger(buffer, 10).toString(16).toUpperCase();
-		//return Long.toHexString(Long.parseLong(buffer));
 	}
 	
 	public String convertOctToHex()
 	{	
 		return new BigInteger(buffer, 8).toString(16).toUpperCase();
-		//return Long.toHexString(Long.parseLong(buffer, 8));
 	}
 	
 	public String convertBinToHex()
 	{
 		return new BigInteger(buffer, 2).toString(16).toUpperCase();
-		//return value.toString(16);
-		//return Long.toHexString(Long.parseLong(buffer, 2));
 	}
 	
 	public String convertDecToBin()
 	{
 		return new BigInteger(buffer, 10).toString(2);
-		//return Long.toBinaryString(Long.parseLong(buffer));
 	}
 	
 	public String convertHexToBin()
 	{
 		return new BigInteger(buffer, 16).toString(2);
-		//return Long.toBinaryString(Long.parseLong(buffer, 16));
 	}
 	
 	public String convertOctToBin()
 	{
 		return new BigInteger(buffer, 8).toString(2);
-		//return Long.toBinaryString(Long.parseLong(buffer, 8));
 	}
 	
 	public void addToBuffer(String num)
 	{
-		if (buffer == "0")
+		if (Double.valueOf(buffer) == 0.0)
 		{
 			buffer = num;
 		}
@@ -1293,14 +1290,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	
 	public boolean isInt(String number)
 	{
-		//Figure out if the given number is an integer (has decimal).
-		//if (number.charAt(number.length() - 1) == '.')
-		//{
-			//If the last character of the string is a period, remove it
-			//number = number.substring(0, number.length() - 1);
-		//}
-		//else
-		//{
+		//Figure out if the given number is an integer (without decimal).
 			for (int i = 0; i < number.length(); ++i)
 			{
 				if (number.charAt(i) == '.')
@@ -1308,7 +1298,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					return false;
 				}
 			}
-		//}
 
 		return true;
 	}
