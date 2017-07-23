@@ -865,7 +865,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		{
 			if (currentFormat == "dec")
 			{
-				buffer = (Double.valueOf(total) / 100.0) + "";
+				buffer = (Double.valueOf(total) * (Double.valueOf(buffer) / 100.0)) + "";
 				if (buffer.charAt(buffer.length() - 1) == '0' && buffer.charAt(buffer.length() - 2) == '.')
 				{
 					buffer = removeDecimal(buffer);
