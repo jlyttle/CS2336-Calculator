@@ -596,6 +596,13 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				convertBufferToBinary();
 				displayBinaryBuffer();
 			}
+			else
+			{
+				if (resultField.getText() != "0")
+				{
+					displayBuffer();
+				}
+			}
 		}
 		else if (e.getSource() == one)
 		{
@@ -758,42 +765,52 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		else if (e.getSource() == plus)
 		{
 			completeLastOperation();
-			total = buffer;
-			//long totalLong = Long.parseLong(buffer) + Long.parseLong(total);
-			//total = totalLong + "";
+			if (buffer != "Cannot divide by zero")
+			{
+				total = buffer;
+				convertBufferToBinary();
+				displayBinaryBuffer();				
+			}
 			displayBuffer();
-			convertBufferToBinary();
-			displayBinaryBuffer();
 			buffer = "0";
 			lastOperation = "add";
 		}
 		else if (e.getSource() == minus)
 		{
 			completeLastOperation();
-			total = buffer;
+			if (buffer != "Cannot divide by zero")
+			{
+				total = buffer;
+				convertBufferToBinary();
+				displayBinaryBuffer();				
+			}
 			displayBuffer();
-			convertBufferToBinary();
-			displayBinaryBuffer();
 			buffer = "0";
 			lastOperation = "subtract";
 		}
 		else if (e.getSource() == multiply)
 		{
 			completeLastOperation();
-			total = buffer;
+			if (buffer != "Cannot divide by zero")
+			{
+				total = buffer;
+				convertBufferToBinary();
+				displayBinaryBuffer();				
+			}
 			displayBuffer();
-			convertBufferToBinary();
-			displayBinaryBuffer();
 			buffer = "0";
 			lastOperation = "multiply";
 		}
 		else if (e.getSource() == divide)
 		{
 			completeLastOperation();
-			total = buffer;
+			if (buffer != "Cannot divide by zero")
+			{
+				total = buffer;
+				convertBufferToBinary();
+				displayBinaryBuffer();				
+			}
 			displayBuffer();
-			convertBufferToBinary();
-			displayBinaryBuffer();
 			buffer = "0";
 			lastOperation = "divide";
 		}
@@ -807,22 +824,26 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		else if (e.getSource() == equals)
 		{
 			completeLastOperation();
-			total = buffer;
+			if (buffer != "Cannot divide by zero")
+			{
+				total = buffer;
+				convertBufferToBinary();
+				displayBinaryBuffer();				
+			}
 			displayBuffer();
-			convertBufferToBinary();
-			displayBinaryBuffer();
-			//prevAmount = buffer;
-			//prevOperation = lastOperation;
 			buffer = "0";
 			lastOperation = "equals";
 		}
 		else if (e.getSource() == mod)
 		{
 			completeLastOperation();
-			total = buffer;
+			if (buffer != "Cannot divide by zero")
+			{
+				total = buffer;
+				convertBufferToBinary();
+				displayBinaryBuffer();				
+			}
 			displayBuffer();
-			convertBufferToBinary();
-			displayBinaryBuffer();
 			buffer = "0";
 			lastOperation = "mod";
 		}
@@ -831,11 +852,18 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			if (currentFormat == "dec")
 			{
 				buffer = Math.sqrt(Double.parseDouble(buffer)) + "";
+				if (buffer.charAt(buffer.length() - 1) == '0' && buffer.charAt(buffer.length() - 2) == '.')
+				{
+					buffer = removeDecimal(buffer);
+				}
 			}
-
 			displayBuffer();
 			convertBufferToBinary();
 			displayBinaryBuffer();
+		}
+		else if (e.getSource() == percent)
+		{
+			
 		}
 		else if (e.getSource() == hexButton)
 		{
@@ -1033,6 +1061,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 
 	public void completeLastOperation()
 	{
+		if (buffer.length() > 1)
+		{
+			if (buffer.charAt(buffer.length() - 1) == '0' && (buffer.charAt(buffer.length() - 2)) == '.')
+			{
+				buffer = removeDecimal(buffer);
+			}
+		}
+		
 		//If we're chaining operations, complete those first, then set the operation to subtract.
 		if (lastOperation == "add")
 		{
@@ -1114,7 +1150,11 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		}
 		else if (lastOperation == "divide")
 		{
-			if (currentFormat == "dec")
+			if (Double.valueOf(buffer) == 0.0)
+			{
+				buffer = "Cannot divide by zero";
+			}
+			else if (currentFormat == "dec")
 			{
 				if (isInt(buffer) && isInt(total))
 				{
