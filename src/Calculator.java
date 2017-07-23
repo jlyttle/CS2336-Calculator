@@ -107,7 +107,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		
 		hexField = new JTextArea();
 		hexField.setEditable(false);
-		hexField.setBackground(this.getBackground());
+		hexField.setBackground(new Color(0, 0, 0, 0));
 		hexField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		hexField.setMaximumSize(new Dimension(425, 75));
 		hexField.setText("0000 0000 0000 0000 0000 0000 0000 0000\n"
@@ -115,7 +115,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					   + "0000 0000 0000 0000 0000 0000 0000 0000\n"
 					   + "31                  15                0");
 		
-		hexField.setBorder(BorderFactory.createEtchedBorder());
+		hexField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 	}
 	
 	private void createRadioButtons()
@@ -884,6 +884,20 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			convertBufferToBinary();
 			displayBinaryBuffer();
 		}
+		else if (e.getSource() == fraction)
+		{
+			if (currentFormat == "dec")
+			{
+				buffer = (1.0 / Double.valueOf(buffer)) + "";
+				if (buffer.charAt(buffer.length() - 1) == '0' && buffer.charAt(buffer.length() - 2) == '.')
+				{
+					buffer = removeDecimal(buffer);
+				}
+			}
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
 		else if (e.getSource() == hexButton)
 		{
 			if (lastOperation != "none")
@@ -901,6 +915,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				}
 				buffer = convertDecToHex();
 				root.setEnabled(false);
+				percent.setEnabled(false);
+				fraction.setEnabled(false);
 			}
 			else if (currentFormat == "oct")
 			{
@@ -948,6 +964,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				}
 				buffer = convertDecToOct();
 				root.setEnabled(false);
+				percent.setEnabled(false);
+				fraction.setEnabled(false);
 			}
 			else if (currentFormat == "hex")
 			{
@@ -996,6 +1014,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				}
 				buffer = convertDecToBin();
 				root.setEnabled(false);
+				percent.setEnabled(false);
+				fraction.setEnabled(false);
 			}
 			else if (currentFormat == "hex")
 			{
@@ -1075,6 +1095,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			}
 			period.setEnabled(true);
 			root.setEnabled(true);
+			percent.setEnabled(true);
+			fraction.setEnabled(true);
 		}
 	}
 
@@ -1284,7 +1306,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	
 	public void addToBuffer(String num)
 	{
-		if (Double.valueOf(buffer) == 0.0)
+		if (buffer.equals("0"))
 		{
 			buffer = num;
 		}
