@@ -40,6 +40,5 @@ public class CalcTest
 		window.setTitle("Calculator");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
-		//window.pack();
 	}
 }

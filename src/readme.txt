@@ -1,0 +1,1 @@
+This uses the Nimbus look and feel, which should work fine on Java 6 and above.

@@ -9,7 +9,7 @@ import java.awt.event.*;
 import java.math.BigInteger;
 import javax.swing.*;
 
-public class Calculator extends JFrame implements ActionListener, MouseListener
+public class Calculator extends JFrame implements ActionListener
 {
 	private String buffer = "0", total = "0", lastOperation = "none", binaryString, currentFormat = "dec";
 	private JPanel radioPanel1, radioPanel2, buttonPanel1;
@@ -1384,11 +1384,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		resultField.setText(buffer);
 	}
 	
-	public void displayTotal()
-	{
-		resultField.setText(total);
-	}
-	
 	public void convertBufferToBinary()
 	{
 		if (currentFormat == "dec")
@@ -1458,42 +1453,6 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					}
 				}
 		}
-	}
-	
-	@Override
-	public void mouseClicked(MouseEvent e) 
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) 
-	{
-		// TODO Auto-generated method stub
-
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) 
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) 
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) 
-	{
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public void getClipboard()
