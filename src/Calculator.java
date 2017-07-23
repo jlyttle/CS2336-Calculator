@@ -268,7 +268,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		mod = new JButton("Mod");
 		mod.setPreferredSize(buttonSize);
 		mod.setFont(new Font("Arial", Font.PLAIN, 9));
-		quot.addActionListener(this);
+		mod.addActionListener(this);
 
 		//A button
 		a = new JButton("A");
@@ -816,6 +816,16 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			buffer = "0";
 			lastOperation = "equals";
 		}
+		else if (e.getSource() == mod)
+		{
+			completeLastOperation();
+			total = buffer;
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+			buffer = "0";
+			lastOperation = "mod";
+		}
 		else if (e.getSource() == hexButton)
 		{
 			if (lastOperation != "none")
@@ -1111,6 +1121,32 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			else
 			{
 				buffer = Long.toBinaryString(Long.parseLong(total, 2) / Long.parseLong(buffer, 2));	
+			}
+		}
+		else if (lastOperation == "mod")
+		{
+			if (currentFormat == "dec")
+			{
+				if (isInt(buffer) && isInt(total))
+				{
+					buffer = (Long.parseLong(total) % Long.parseLong(buffer)) + "";
+				}
+				else
+				{
+					buffer = (Double.parseDouble(total) % Double.parseDouble(buffer)) + "";
+				}
+			}
+			else if (currentFormat == "hex")
+			{
+				buffer = Long.toHexString(Long.parseLong(total, 16) % Long.parseLong(buffer, 16)).toUpperCase();
+			}
+			else if (currentFormat == "oct")
+			{
+				buffer = Long.toOctalString(Long.parseLong(total, 8) % Long.parseLong(buffer, 8));
+			}
+			else
+			{
+				buffer = Long.toBinaryString(Long.parseLong(total, 2) % Long.parseLong(buffer, 2));
 			}
 		}
 	}
