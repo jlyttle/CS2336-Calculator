@@ -24,11 +24,18 @@ public class CalcTest
 	    }
 		catch (Exception e) 
 		{
-			// TODO Auto-generated catch block
+			try
+			{
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
 			e.printStackTrace();
 		}
 		Calculator window = new Calculator();
-		window.setSize(500, 500);
+		window.setSize(425, 405);
 		window.setVisible(true);
 		window.setTitle("Calculator");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

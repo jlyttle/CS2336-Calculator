@@ -7,12 +7,11 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.math.BigInteger;
-
 import javax.swing.*;
 
 public class Calculator extends JFrame implements ActionListener, MouseListener
 {
-	private String buffer = "0", total = "0", lastOperation = "none", binaryString, currentFormat = "dec", lastFormat;
+	private String buffer = "0", total = "0", lastOperation = "none", binaryString, currentFormat = "dec";
 	private JPanel radioPanel1, radioPanel2, buttonPanel1;
 	private ButtonGroup radioButtons1, radioButtons2;
 	private JMenuBar menubar;
@@ -22,7 +21,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	private JButton blank, blank2, blank3, blank4, blank5, blank6, blank7, blank8, blank9, blank10, blank11, blank12, blank13, blank14, blank15,
 					a, b, c, d, e, f, mod, backspace, ce, clear, plusMinus, root, percent, fraction, equals, plus, minus, multiply, divide, period,
 					one, two, three, four, five, six, seven, eight, nine, zed, quot;
-	private JTextField num1Field, resultField;
+	private JTextField resultField;
 	private JTextArea hexField;
 	private Clipboard clipboard;
 	
@@ -43,10 +42,11 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 						.addComponent(menubar)
 						.addGap(10)
 						.addGroup(layout.createSequentialGroup()
-							.addGap(35)
+							.addGap(10)
 							.addComponent(resultField))
+						.addGap(5)
 						.addGroup(layout.createSequentialGroup()
-							.addGap(35)
+							.addGap(10)
 							.addComponent(hexField))
 						.addComponent(buttonPanel1, GroupLayout.Alignment.CENTER, 200, 250, 500)));
 
@@ -55,10 +55,11 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					.addComponent(menubar)
 					.addGap(10)
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGap(35)
+						.addGap(10)
 						.addComponent(resultField))
+					.addGap(5)
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-							.addGap(35)
+							.addGap(10)
 							.addComponent(hexField))
 					.addComponent(buttonPanel1, 200, 250, 500));
 	}
@@ -92,6 +93,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		menubar.add(edit);
 		menubar.add(help);
 		menubar.setMaximumSize(new Dimension(525, 25));
+		menubar.setMinimumSize(new Dimension(415, 20));
 	}
 	
 	private void createResultArea()
@@ -99,23 +101,24 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		//Result Field
 		resultField = new JTextField(10);
 		resultField.setEditable(false);
-		resultField.setBackground(new Color(209, 209, 209));
 		resultField.setHorizontalAlignment(JTextField.RIGHT);
-		resultField.setFont(new Font("SansSerif", Font.BOLD, 35));
+		resultField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
 		resultField.setText("0");
-		resultField.setMaximumSize(new Dimension(425, 75));
+		resultField.setMaximumSize(new Dimension(395, 75));
+		resultField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		
 		hexField = new JTextArea();
 		hexField.setEditable(false);
 		hexField.setBackground(new Color(0, 0, 0, 0));
 		hexField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-		hexField.setMaximumSize(new Dimension(425, 75));
-		hexField.setText("0000 0000 0000 0000 0000 0000 0000 0000\n"
-					   + "63                  47               32\n"
-					   + "0000 0000 0000 0000 0000 0000 0000 0000\n"
-					   + "31                  15                0");
+		hexField.setMaximumSize(new Dimension(395, 75));
+		hexField.setText(" 0000   0000   0000   0000   0000   0000   0000   0000\n"
+					   + " 63                          47                     32\n"
+					   + " 0000   0000   0000   0000   0000   0000   0000   0000\n"
+					   + " 31                          15                      0");
 		
 		hexField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		resultField.setBackground(hexField.getBackground());
 	}
 	
 	private void createRadioButtons()
@@ -134,6 +137,11 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		decButton.addActionListener(this);
 		octButton.addActionListener(this);
 		binButton.addActionListener(this);
+		
+		hexButton.setFont(new Font("Arial", Font.PLAIN, 11));
+		decButton.setFont(new Font("Arial", Font.PLAIN, 11));
+		octButton.setFont(new Font("Arial", Font.PLAIN, 11));
+		binButton.setFont(new Font("Arial", Font.PLAIN, 11));
 		
 		radioButtons1.add(hexButton);
 		radioButtons1.add(decButton);
@@ -159,6 +167,11 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		wordButton = new JRadioButton("Word");
 		byteButton = new JRadioButton("Byte");
 		
+		qwordButton.setFont(new Font("Arial", Font.PLAIN, 11));
+		dwordButton.setFont(new Font("Arial", Font.PLAIN, 11));
+		wordButton.setFont(new Font("Arial", Font.PLAIN, 11));
+		byteButton.setFont(new Font("Arial", Font.PLAIN, 11));
+		
 		radioButtons2.add(qwordButton);
 		radioButtons2.add(dwordButton);
 		radioButtons2.add(wordButton);
@@ -179,7 +192,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		buttonPanel1 = new JPanel();
 		buttonPanel1.setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
-		Dimension buttonSize = new Dimension(45, 25);
+		Dimension buttonSize = new Dimension(40, 25);
 		
 		//Blank buttons
 		blank = new JButton();
@@ -257,16 +270,18 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		blank15.setPreferredSize(buttonSize);
 		blank15.setEnabled(false);
 		
-		//Quot? What is this?
+		//Quot button
 		quot = new JButton("Quot");
 		quot.setOpaque(false);
 		quot.setPreferredSize(buttonSize);
-		quot.setFont(new Font("Arial", Font.PLAIN, 8));
+		quot.setBorder(null);
+		quot.setFont(new Font("Arial", Font.PLAIN, 9));
 		quot.addActionListener(this);
 		
 		//Mod button
 		mod = new JButton("Mod");
 		mod.setPreferredSize(buttonSize);
+		mod.setBorder(null);
 		mod.setFont(new Font("Arial", Font.PLAIN, 9));
 		mod.addActionListener(this);
 
@@ -345,11 +360,13 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		//Backspace
 		backspace = new JButton("\u2190");
 		backspace.setPreferredSize(buttonSize);
+		backspace.setBorder(null);
 		backspace.addActionListener(this);
 		
 		//CE
 		ce = new JButton("CE");
 		ce.setPreferredSize(buttonSize);
+		ce.setBorder(null);
 		ce.addActionListener(this);
 		
 		clear = new JButton("C");
@@ -383,10 +400,12 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		
 		percent = new JButton("%");
 		percent.setPreferredSize(buttonSize);
+		percent.setBorder(null);
 		percent.addActionListener(this);
 		
 		fraction = new JButton("1\u2044x");
 		fraction.setPreferredSize(buttonSize);
+		fraction.setBorder(null);
 		fraction.addActionListener(this);
 		
 		equals = new JButton("=");
@@ -400,166 +419,171 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.ipady = 10;
 		
+		constraints.ipadx = 18;
 		constraints.gridheight = 3;
+		constraints.gridwidth = 2;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		buttonPanel1.add(radioPanel1, constraints);
 		constraints.gridheight = 3;
+		constraints.gridwidth = 2;
 		constraints.gridx = 0;
 		constraints.gridy = 3;
 		buttonPanel1.add(radioPanel2, constraints);
 		
+		constraints.ipadx = 0;
 		constraints.gridheight = 1;
-		constraints.gridx = 1;
-		constraints.gridy = 0;
-		buttonPanel1.add(quot, constraints);
+		constraints.gridwidth = 1;
 		constraints.gridx = 2;
 		constraints.gridy = 0;
-		buttonPanel1.add(mod, constraints);
+		buttonPanel1.add(quot, constraints);
 		constraints.gridx = 3;
 		constraints.gridy = 0;
-		buttonPanel1.add(a, constraints);
+		buttonPanel1.add(mod, constraints);
 		constraints.gridx = 4;
 		constraints.gridy = 0;
-		buttonPanel1.add(blank9, constraints);
+		buttonPanel1.add(a, constraints);
 		constraints.gridx = 5;
 		constraints.gridy = 0;
-		buttonPanel1.add(blank10, constraints);
+		buttonPanel1.add(blank9, constraints);
 		constraints.gridx = 6;
 		constraints.gridy = 0;
-		buttonPanel1.add(blank11, constraints);
+		buttonPanel1.add(blank10, constraints);
 		constraints.gridx = 7;
 		constraints.gridy = 0;
-		buttonPanel1.add(blank12, constraints);
+		buttonPanel1.add(blank11, constraints);
 		constraints.gridx = 8;
+		constraints.gridy = 0;
+		buttonPanel1.add(blank12, constraints);
+		constraints.gridx = 9;
 		constraints.gridy = 0;
 		buttonPanel1.add(blank13, constraints);
 
 		//Row 2
-		constraints.gridx = 1;
-		constraints.gridy = 1;
-		buttonPanel1.add(blank, constraints);
 		constraints.gridx = 2;
 		constraints.gridy = 1;
-		buttonPanel1.add(blank2, constraints);
+		buttonPanel1.add(blank, constraints);
 		constraints.gridx = 3;
 		constraints.gridy = 1;
-		buttonPanel1.add(b, constraints);
+		buttonPanel1.add(blank2, constraints);
 		constraints.gridx = 4;
 		constraints.gridy = 1;
-		buttonPanel1.add(backspace, constraints);
+		buttonPanel1.add(b, constraints);
 		constraints.gridx = 5;
 		constraints.gridy = 1;
-		buttonPanel1.add(ce, constraints);
+		buttonPanel1.add(backspace, constraints);
 		constraints.gridx = 6;
 		constraints.gridy = 1;
-		buttonPanel1.add(clear, constraints);
+		buttonPanel1.add(ce, constraints);
 		constraints.gridx = 7;
 		constraints.gridy = 1;
-		buttonPanel1.add(plusMinus, constraints);
+		buttonPanel1.add(clear, constraints);
 		constraints.gridx = 8;
+		constraints.gridy = 1;
+		buttonPanel1.add(plusMinus, constraints);
+		constraints.gridx = 9;
 		constraints.gridy = 1;
 		buttonPanel1.add(root, constraints);
 
 		//Row 3
-		constraints.gridx = 1;
-		constraints.gridy = 2;
-		buttonPanel1.add(blank3, constraints);
 		constraints.gridx = 2;
 		constraints.gridy = 2;
-		buttonPanel1.add(blank4, constraints);
+		buttonPanel1.add(blank3, constraints);
 		constraints.gridx = 3;
 		constraints.gridy = 2;
-		buttonPanel1.add(c, constraints);
+		buttonPanel1.add(blank4, constraints);
 		constraints.gridx = 4;
 		constraints.gridy = 2;
-		buttonPanel1.add(seven, constraints);
+		buttonPanel1.add(c, constraints);
 		constraints.gridx = 5;
 		constraints.gridy = 2;
-		buttonPanel1.add(eight, constraints);
+		buttonPanel1.add(seven, constraints);
 		constraints.gridx = 6;
 		constraints.gridy = 2;
-		buttonPanel1.add(nine, constraints);
+		buttonPanel1.add(eight, constraints);
 		constraints.gridx = 7;
 		constraints.gridy = 2;
-		buttonPanel1.add(divide, constraints);
+		buttonPanel1.add(nine, constraints);
 		constraints.gridx = 8;
+		constraints.gridy = 2;
+		buttonPanel1.add(divide, constraints);
+		constraints.gridx = 9;
 		constraints.gridy = 2;
 		buttonPanel1.add(percent, constraints);
 		
 		//Row 4
-		constraints.gridx = 1;
-		constraints.gridy = 3;
-		buttonPanel1.add(blank5, constraints);
 		constraints.gridx = 2;
 		constraints.gridy = 3;
-		buttonPanel1.add(blank6, constraints);
+		buttonPanel1.add(blank5, constraints);
 		constraints.gridx = 3;
 		constraints.gridy = 3;
-		buttonPanel1.add(d, constraints);
+		buttonPanel1.add(blank6, constraints);
 		constraints.gridx = 4;
 		constraints.gridy = 3;
-		buttonPanel1.add(four, constraints);
+		buttonPanel1.add(d, constraints);
 		constraints.gridx = 5;
 		constraints.gridy = 3;
-		buttonPanel1.add(five, constraints);
+		buttonPanel1.add(four, constraints);
 		constraints.gridx = 6;
 		constraints.gridy = 3;
-		buttonPanel1.add(six, constraints);
+		buttonPanel1.add(five, constraints);
 		constraints.gridx = 7;
 		constraints.gridy = 3;
-		buttonPanel1.add(multiply, constraints);
+		buttonPanel1.add(six, constraints);
 		constraints.gridx = 8;
+		constraints.gridy = 3;
+		buttonPanel1.add(multiply, constraints);
+		constraints.gridx = 9;
 		constraints.gridy = 3;
 		buttonPanel1.add(fraction, constraints);
 
 		//Row 5
-		constraints.gridx = 1;
-		constraints.gridy = 4;
-		buttonPanel1.add(blank7, constraints);
 		constraints.gridx = 2;
 		constraints.gridy = 4;
-		buttonPanel1.add(blank8, constraints);
+		buttonPanel1.add(blank7, constraints);
 		constraints.gridx = 3;
 		constraints.gridy = 4;
-		buttonPanel1.add(e, constraints);
+		buttonPanel1.add(blank8, constraints);
 		constraints.gridx = 4;
 		constraints.gridy = 4;
-		buttonPanel1.add(one, constraints);
+		buttonPanel1.add(e, constraints);
 		constraints.gridx = 5;
 		constraints.gridy = 4;
-		buttonPanel1.add(two, constraints);
+		buttonPanel1.add(one, constraints);
 		constraints.gridx = 6;
 		constraints.gridy = 4;
-		buttonPanel1.add(three, constraints);
+		buttonPanel1.add(two, constraints);
 		constraints.gridx = 7;
 		constraints.gridy = 4;
-		buttonPanel1.add(minus, constraints);
+		buttonPanel1.add(three, constraints);
 		constraints.gridx = 8;
+		constraints.gridy = 4;
+		buttonPanel1.add(minus, constraints);
+		constraints.gridx = 9;
 		constraints.gridy = 4;
 		constraints.gridheight = 2;
 		buttonPanel1.add(equals, constraints);
 		
 		//Row 6
 		constraints.gridheight = 1;
-		constraints.gridx = 1;
-		constraints.gridy = 5;
-		buttonPanel1.add(blank14, constraints);
 		constraints.gridx = 2;
 		constraints.gridy = 5;
-		buttonPanel1.add(blank15, constraints);
+		buttonPanel1.add(blank14, constraints);
 		constraints.gridx = 3;
 		constraints.gridy = 5;
-		buttonPanel1.add(f, constraints);
+		buttonPanel1.add(blank15, constraints);
 		constraints.gridx = 4;
+		constraints.gridy = 5;
+		buttonPanel1.add(f, constraints);
+		constraints.gridx = 5;
 		constraints.gridy = 5;
 		constraints.gridwidth = 2;
 		buttonPanel1.add(zed, constraints);
 		constraints.gridwidth = 1;
-		constraints.gridx = 6;
+		constraints.gridx = 7;
 		constraints.gridy = 5;
 		buttonPanel1.add(period, constraints);
-		constraints.gridx = 7;
+		constraints.gridx = 8;
 		constraints.gridy = 5;
 		buttonPanel1.add(plus, constraints);
 	}
@@ -1415,11 +1439,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	{
 		//Replace characters in bit display with the correct substrings of the binary string
 		int characterCount = -1;
-		for (int i = 0; i < 80; i += 5)
+		for (int i = 0; i < 108; i += 7)
 		{
-			//if (i < 36) //We are still on the first row
-			//{
-			//int length = hexField.getText().length();
 				for (int j = 0; j < 4; ++j)
 				{
 					//For each number of the binary string, replace the character of the hexField at its correct location
@@ -1427,23 +1448,13 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					String currentChar = binaryString.substring(binaryString.length() - (characterCount + 1), binaryString.length() - (characterCount));
 					if (characterCount >= 32)
 					{
-						hexField.replaceRange(currentChar, hexField.getText().length() - (80 + i + j + 1), hexField.getText().length() - (80 + i + j));						
+						hexField.replaceRange(currentChar, hexField.getText().length() - (109 + i + j + 1), hexField.getText().length() - (109 + i + j));						
 					}
 					else
 					{						
-						hexField.replaceRange(currentChar, hexField.getText().length() - (40 + i + j + 1), hexField.getText().length() - (40 + i + j));
+						hexField.replaceRange(currentChar, hexField.getText().length() - (55 + i + j + 1), hexField.getText().length() - (55 + i + j));
 					}
 				}
-			//}
-			//else if (i >= 36) //We are on the second row
-			//{
-				//for (int j = 0; j < 4; ++j)
-				//{
-					//For each number of the binary string, replace the character of the hexField at its correct location
-					//++characterCount;
-					//String currentChar = binaryString.substring(binaryString.length() - (characterCount + 1), binaryString.length() - (characterCount));
-				//}
-			//}
 		}
 	}
 	
