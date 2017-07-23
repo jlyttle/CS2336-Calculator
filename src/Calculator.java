@@ -826,6 +826,17 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			buffer = "0";
 			lastOperation = "mod";
 		}
+		else if (e.getSource() == root)
+		{
+			if (currentFormat == "dec")
+			{
+				buffer = Math.sqrt(Double.parseDouble(buffer)) + "";
+			}
+
+			displayBuffer();
+			convertBufferToBinary();
+			displayBinaryBuffer();
+		}
 		else if (e.getSource() == hexButton)
 		{
 			if (lastOperation != "none")
@@ -841,7 +852,8 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				{
 					buffer = removeDecimal(buffer);
 				}
-				buffer = convertDecToHex();				
+				buffer = convertDecToHex();
+				root.setEnabled(false);
 			}
 			else if (currentFormat == "oct")
 			{
@@ -888,6 +900,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					buffer = removeDecimal(buffer);
 				}
 				buffer = convertDecToOct();
+				root.setEnabled(false);
 			}
 			else if (currentFormat == "hex")
 			{
@@ -935,6 +948,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					buffer = removeDecimal(buffer);
 				}
 				buffer = convertDecToBin();
+				root.setEnabled(false);
 			}
 			else if (currentFormat == "hex")
 			{
@@ -1013,6 +1027,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 				f.setEnabled(false);
 			}
 			period.setEnabled(true);
+			root.setEnabled(true);
 		}
 	}
 
