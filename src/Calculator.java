@@ -379,12 +379,15 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		
 		root = new JButton("\u221A");
 		root.setPreferredSize(buttonSize);
+		root.addActionListener(this);
 		
 		percent = new JButton("%");
 		percent.setPreferredSize(buttonSize);
+		percent.addActionListener(this);
 		
 		fraction = new JButton("1\u2044x");
 		fraction.setPreferredSize(buttonSize);
+		fraction.addActionListener(this);
 		
 		equals = new JButton("=");
 		equals.setPreferredSize(new Dimension(10, 20));
@@ -657,6 +660,24 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			convertBufferToBinary();
 			displayBinaryBuffer();
 		}
+		else if (e.getSource() == period)
+		{
+			if (isInt(buffer))
+			{
+				if (buffer == "0")
+				{
+					buffer += ".";
+				}
+				else
+				{
+					addToBuffer(".");					
+				}
+				
+				displayBuffer();
+				convertBufferToBinary();
+				displayBinaryBuffer();
+			}
+		}
 		
 		else if (e.getSource() == a)
 		{
@@ -806,6 +827,10 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			
 			if (currentFormat == "dec")
 			{
+				if (!isInt(buffer))
+				{
+					buffer = removeDecimal(buffer);
+				}
 				buffer = convertDecToHex();				
 			}
 			else if (currentFormat == "oct")
@@ -848,6 +873,10 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			
 			if (currentFormat == "dec")
 			{
+				if (!isInt(buffer))
+				{
+					buffer = removeDecimal(buffer);
+				}
 				buffer = convertDecToOct();
 			}
 			else if (currentFormat == "hex")
@@ -891,6 +920,10 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			
 			if (currentFormat == "dec")
 			{
+				if (!isInt(buffer))
+				{
+					buffer = removeDecimal(buffer);
+				}
 				buffer = convertDecToBin();
 			}
 			else if (currentFormat == "hex")
@@ -980,7 +1013,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		{
 			if (currentFormat == "dec")
 			{
-				buffer = (Long.parseLong(buffer) + Long.parseLong(total)) + "";					
+				if (isInt(buffer) && isInt(total))
+				{
+					buffer = (Long.parseLong(buffer) + Long.parseLong(total)) + "";										
+				}
+				else
+				{
+					buffer = (Double.parseDouble(buffer) + Double.parseDouble(total)) + "";
+				}
 			}
 			else if (currentFormat == "hex")
 			{
@@ -999,7 +1039,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		{
 			if (currentFormat == "dec")
 			{
-				buffer = (Long.parseLong(total) - Long.parseLong(buffer)) + "";					
+				if (isInt(buffer) && isInt(total))
+				{
+					buffer = (Long.parseLong(total) - Long.parseLong(buffer)) + "";										
+				}
+				else
+				{
+					buffer = (Double.parseDouble(total) - Double.parseDouble(buffer)) + "";
+				}
 			}
 			else if (currentFormat == "hex")
 			{
@@ -1018,7 +1065,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		{
 			if (currentFormat == "dec")
 			{
-				buffer = (Long.parseLong(buffer) * Long.parseLong(total)) + "";					
+				if (isInt(buffer) && isInt(total))
+				{
+					buffer = (Long.parseLong(buffer) * Long.parseLong(total)) + "";						
+				}
+				else
+				{
+					buffer = (Double.parseDouble(buffer) * Double.parseDouble(total)) + "";
+				}
 			}
 			else if (currentFormat == "hex")
 			{
@@ -1037,7 +1091,14 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		{
 			if (currentFormat == "dec")
 			{
-				buffer = (Long.parseLong(total) / Long.parseLong(buffer)) + "";					
+				if (isInt(buffer) && isInt(total))
+				{
+					buffer = (Long.parseLong(total) / Long.parseLong(buffer)) + "";						
+				}
+				else
+				{
+					buffer = (Double.parseDouble(total) / Double.parseDouble(buffer)) + "";
+				}
 			}
 			else if (currentFormat == "hex")
 			{
@@ -1142,14 +1203,36 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	public boolean isInt(String number)
 	{
 		//Figure out if the given number is an integer (has decimal).
+		//if (number.charAt(number.length() - 1) == '.')
+		//{
+			//If the last character of the string is a period, remove it
+			//number = number.substring(0, number.length() - 1);
+		//}
+		//else
+		//{
+			for (int i = 0; i < number.length(); ++i)
+			{
+				if (number.charAt(i) == '.')
+				{
+					return false;
+				}
+			}
+		//}
+
+		return true;
+	}
+	
+	public String removeDecimal(String number)
+	{
+		//Removes any decimal places in a number string
 		for (int i = 0; i < number.length(); ++i)
 		{
-			if (number.charAt(i) == ',')
+			if (number.charAt(i) == '.')
 			{
-				return true;
+				return number.substring(0, i);
 			}
 		}
-		return false;
+		return number;
 	}
 	
 	public boolean isNegative()
@@ -1176,7 +1259,17 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 	{
 		if (currentFormat == "dec")
 		{
-			binaryString = new BigInteger(buffer, 10).toString(2);		
+			String intBuffer;
+			if (!isInt(buffer))
+			{
+				intBuffer = removeDecimal(buffer);
+			}
+			else
+			{
+				intBuffer = buffer;
+			}
+			
+			binaryString = new BigInteger(intBuffer, 10).toString(2);
 		}
 		else if (currentFormat == "oct")
 		{
