@@ -801,7 +801,7 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			buffer = "0";
 			lastOperation = "multiply";
 		}
-		else if (e.getSource() == divide)
+		else if (e.getSource() == divide || e.getSource() == quot)
 		{
 			completeLastOperation();
 			if (buffer != "Cannot divide by zero")
@@ -857,7 +857,16 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 					buffer = removeDecimal(buffer);
 				}
 			}
-			displayBuffer();
+			if (buffer.equals("NaN"))
+			{
+				buffer = "Undefined";
+				displayBuffer();
+				buffer = "0";
+			}
+			else
+			{
+				displayBuffer();
+			}
 			convertBufferToBinary();
 			displayBinaryBuffer();
 		}
@@ -1166,13 +1175,10 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 			}
 			else if (currentFormat == "dec")
 			{
-				if (isInt(buffer) && isInt(total) && Integer.valueOf(total) > Integer.valueOf(buffer))
+				buffer = (Double.parseDouble(total) / Double.parseDouble(buffer)) + "";
+				if (buffer.charAt(buffer.length() - 1) == '0' && (buffer.charAt(buffer.length() - 2)) == '.')
 				{
-					buffer = (Long.parseLong(total) / Long.parseLong(buffer)) + "";						
-				}
-				else
-				{
-					buffer = (Double.parseDouble(total) / Double.parseDouble(buffer)) + "";
+					buffer = removeDecimal(buffer);
 				}
 			}
 			else if (currentFormat == "hex")
