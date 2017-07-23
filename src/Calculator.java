@@ -608,7 +608,9 @@ public class Calculator extends JFrame implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == helpItem)
 		{
-			JOptionPane.showMessageDialog(this, "Test");
+			JOptionPane.showMessageDialog(this, "Windows-Style Programmer Calculator\n"
+											  + "By Jonathan Lyttle\n\n"
+											  + "Input numbers and perform calculations with mouse.");
 		}
 		
 		else if (e.getSource() == zed)
